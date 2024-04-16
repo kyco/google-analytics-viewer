@@ -14,6 +14,7 @@ import {
   transformUniversalData,
 } from './actions'
 import type { FormData } from './actions'
+import { PageViewsTable } from './components'
 
 type ChartData = {
   labels: string[]
@@ -22,8 +23,8 @@ type ChartData = {
 
 const Page = () => {
   const [formData, setFormData] = useState<FormData>(defaultFormData)
-  const [response, setResponse] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [tableData, setTableData] = useState<any[]>([])
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [],
@@ -32,27 +33,26 @@ const Page = () => {
   const handleSubmit = async () => {
     setIsLoading(true)
     let res = []
+    let transformedData = []
     if (formData.mode === 'ua') {
       res = await getUniversalStats(formData)
+      transformedData = transformUniversalData(res)
     } else {
       res = await getGa4Stats(formData)
+      transformedData = transformGa4Data(res)
     }
-    setResponse(res)
+    setTableData(transformedData)
+    setChartData(convertToChartData(transformedData))
     setIsLoading(false)
   }
 
   useEffect(() => {
-    console.log('uE response', response)
-    let transformedData = []
-    if (formData.mode === 'ua') {
-      transformedData = transformUniversalData(response)
-    } else {
-      transformedData = transformGa4Data(response)
-    }
-    console.log('transformedData', transformedData)
-    const { labels, datasets } = convertToChartData(transformedData)
-    setChartData({ labels, datasets })
-  }, [response])
+    setTableData([])
+    setChartData({
+      labels: [],
+      datasets: [],
+    })
+  }, [formData.mode])
 
   return (
     <Container maxWidth="lg">
@@ -163,8 +163,7 @@ const Page = () => {
         </Grid>
 
         <Grid xs={12}>
-          {/* TODO: Implement */}
-          Table
+          <PageViewsTable data={tableData} mode={formData.mode} />
         </Grid>
       </Grid>
     </Container>

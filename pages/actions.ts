@@ -91,7 +91,7 @@ export const transformUniversalData = (data: any[]) => {
   })
 }
 
-export const convertToChartData = (transformedData: any) => {
+export const convertToChartData = (transformedData: any[]) => {
   return {
     labels: transformedData.map((item: any) => item.label),
     datasets: [
