@@ -110,8 +110,8 @@ export const getGa4Stats = async (data: FormData) => {
   let requests: IRunReportRequest[] = []
   const start = toDate(data.startDate)
   const end = toDate(data.endDate)
-  const metrics = [{ name: 'screenPageViews' }]
-  const dimensions = [{ name: 'pagePath' }]
+  const metrics = [{ name: MISC.GA_METRIC }]
+  const dimensions = [{ name: MISC.GA_DIMENSION }]
 
   switch (data.group) {
     case 'day': {
@@ -167,8 +167,6 @@ export const getUniversalStats = async (data: FormData) => {
   let requests: any[] = []
   const start = toDate(data.startDate)
   const end = toDate(data.endDate)
-  const metrics = 'ga:pageViews'
-  const dimensions = 'ga:pagePath'
 
   switch (data.group) {
     case 'day': {
@@ -177,8 +175,8 @@ export const getUniversalStats = async (data: FormData) => {
         return {
           'start-date': day,
           'end-date': day,
-          metrics,
-          dimensions,
+          metrics: MISC.UA_METRIC,
+          dimensions: MISC.UA_DIMENSION,
         }
       })
       break
@@ -190,8 +188,8 @@ export const getUniversalStats = async (data: FormData) => {
         return {
           'start-date': week.start,
           'end-date': week.end,
-          metrics,
-          dimensions,
+          metrics: MISC.UA_METRIC,
+          dimensions: MISC.UA_DIMENSION,
         }
       })
       break
@@ -203,8 +201,8 @@ export const getUniversalStats = async (data: FormData) => {
         return {
           'start-date': month.start,
           'end-date': month.end,
-          metrics,
-          dimensions,
+          metrics: MISC.UA_METRIC,
+          dimensions: MISC.UA_DIMENSION,
         }
       })
       break

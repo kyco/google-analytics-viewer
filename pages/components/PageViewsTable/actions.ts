@@ -1,6 +1,10 @@
 import { sortBy } from 'lodash'
 
-export const convertToTableRowData = (data: any[], dimension: string, metric: string) => {
+import { MISC } from '@/common'
+
+export const convertToTableRowData = (data: any[], mode: string) => {
+  const dimension = mode === 'ua' ? MISC.UA_DIMENSION : MISC.GA_DIMENSION
+  const metric = mode === 'ua' ? MISC.UA_METRIC : MISC.GA_METRIC
   const mergedRows: any[] = []
 
   data.forEach((row: any) => {

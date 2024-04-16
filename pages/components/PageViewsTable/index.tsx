@@ -9,14 +9,7 @@ type PageViewsTableProps = {
 }
 
 const Component = ({ data }: PageViewsTableProps) => {
-  let rows: any[] = []
-
-  if (data.mode === 'ua') {
-    rows = convertToTableRowData(data.data, 'ga:pagePath', 'ga:pageViews')
-  } else {
-    rows = convertToTableRowData(data.data, 'pagePath', 'screenPageViews')
-  }
-
+  const rows = convertToTableRowData(data.data, data.mode)
   const totalViews = rows.reduce((acc, row) => acc + row.value, 0)
 
   return (
