@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 
 import type { TableData } from '@/typings'
 
@@ -17,13 +17,21 @@ const Component = ({ data }: PageViewsTableProps) => {
     rows = convertToTableRowData(data.data, 'pagePath', 'screenPageViews')
   }
 
+  const totalViews = rows.reduce((acc, row) => acc + row.value, 0)
+
   return (
     <TableContainer sx={{ maxHeight: 485 }}>
       <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Pagepath</TableCell>
-            <TableCell align="right">Views</TableCell>
+            <TableCell>
+              Path
+              <Typography sx={{ fontSize: 13 }}>Total rows: {rows.length}</Typography>
+            </TableCell>
+            <TableCell align="right">
+              Views
+              <Typography sx={{ fontSize: 13 }}>Total views: {totalViews}</Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
