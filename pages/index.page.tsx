@@ -150,11 +150,11 @@ const Page = () => {
           </Button>
         </Grid>
 
-        <Grid xs={12}>
+        <Grid xs={12} mt={1}>
           <PageViewsChart data={chartData} />
         </Grid>
 
-        <Grid xs={12}>
+        <Grid xs={12} mt={1} mb={5}>
           <PageViewsTable data={tableData} mode={formData.mode} />
         </Grid>
       </Grid>

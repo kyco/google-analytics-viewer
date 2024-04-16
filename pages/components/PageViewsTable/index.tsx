@@ -19,8 +19,8 @@ const Component = ({ data, mode }: PageViewsTableProps) => {
   }
 
   return (
-    <TableContainer>
-      <Table size="small">
+    <TableContainer sx={{ maxHeight: 485 }}>
+      <Table size="small" stickyHeader sx={{ tableLayout: 'fixed' }}>
         <TableHead>
           <TableRow>
             <TableCell>Pagepath</TableCell>
@@ -31,7 +31,15 @@ const Component = ({ data, mode }: PageViewsTableProps) => {
           {rows.length ? (
             rows.map((row) => (
               <TableRow key={row.label} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component="th" scope="row">
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
                   {row.label}
                 </TableCell>
                 <TableCell align="right">{row.value}</TableCell>
