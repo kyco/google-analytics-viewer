@@ -148,7 +148,7 @@ const Page = () => {
           </Alert>
         </Grid>
 
-        <Grid xs={12} mb={2}>
+        <Grid xs={12}>
           <LoadingButton
             variant="contained"
             size="large"
@@ -169,11 +169,18 @@ const Page = () => {
             Export Data
           </Button>
         </Grid>
+
         {error ? (
           <Grid xs={12}>
             <Alert severity="error">{error}</Alert>
           </Grid>
         ) : null}
+
+        <Grid xs={12} mt={1}>
+          <Typography sx={{ fontSize: 13 }}>
+            Showing results for: {tableData.mode === 'ua' ? 'Universal Analytics' : 'GA4'}
+          </Typography>
+        </Grid>
 
         <Grid xs={12} mt={1}>
           <PageViewsChart data={chartData} />
