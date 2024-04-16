@@ -44,7 +44,10 @@ const Page = () => {
     if (res.error) {
       console.error('Error:', res.error)
       setError(
-        res.error.details || res.error.errors?.[0].message || 'Failed to load data, check console for more info!',
+        res.error.details ||
+          res.error.errors?.[0].message ||
+          res.error ||
+          'Failed to load data, check console for more info!',
       )
       setIsLoading(false)
       return

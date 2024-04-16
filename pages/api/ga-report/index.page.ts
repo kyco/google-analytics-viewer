@@ -9,11 +9,7 @@ import type { IRunReportRequest } from '@/typings'
 const serviceAccount = process.env.GA_SERVICE_ACCOUNT_CREDENTIALS
 const propertyId = process.env.GA_PROPERTY_ID
 
-if (!serviceAccount) {
-  throw new Error('The $GA_SERVICE_ACCOUNT_CREDENTIALS env var was not found!')
-}
-
-const keys = JSON.parse(serviceAccount)
+const keys = JSON.parse(serviceAccount || '{}')
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
   auth: new GoogleAuth({
@@ -60,16 +56,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
+  if (!serviceAccount) {
+    res.status(500).json({
+      message: 'Failed to load data',
+      error: 'Environment variable `GA_SERVICE_ACCOUNT_CREDENTIALS` was not found!',
+    })
+    return
+  }
+
   if (!propertyId) {
-    res.status(500).json({ message: 'Failed to load data' })
-  } else {
-    try {
-      const data = await runReport(JSON.parse(req.body).requests)
-      res.status(200).json({ data })
-    } catch (error) {
-      console.error('Error:', error)
-      res.status(500).json({ message: 'Failed to load data', error })
-    }
+    res.status(500).json({
+      message: 'Failed to load data',
+      error: 'Environment variable `GA_PROPERTY_ID` was not found!',
+    })
+    return
+  }
+
+  try {
+    const data = await runReport(JSON.parse(req.body).requests)
+    res.status(200).json({ data })
+  } catch (error) {
+    console.error('Error:', error)
+    res.status(500).json({ message: 'Failed to load data', error })
   }
 }
 
