@@ -55,19 +55,20 @@ GA_PROPERTY_ID=<your_ga4_property_id>
 GA_SERVICE_ACCOUNT_CREDENTIALS=<compressed_json_credentials>
 ```
 
-__`GA_UNIVERSAL_VIEW_ID`__
+#### View ID
 
 In Google Analytics _Universal property_:
 - Admin > View Settings > View ID
 
-__`GA_PROPERTY_ID`__
+#### Property ID
 
 In Google Analytics _GA4 property_:
   - Admin > Property details > Property ID
 
-__`GA_SERVICE_ACCOUNT_CREDENTIALS`__
+#### Service account credentials
 
-- Copy the contents of the service account JSON file (from "Step 1") and remove the white space so it fits on a single line, the end result should look something like the following: `{"type": "service_account", "project_id": "abc", ...}`
+Copy the contents of the service account JSON file and remove the white space so it fits on a single line. The end result should look like the following:
+- `{"type": "service_account", "project_id": "abc", ...}`
 
 
 ## Troubleshooting
