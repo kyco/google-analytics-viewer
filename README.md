@@ -2,6 +2,8 @@
 
 Export and view your Universal Analytics data before the [API is disabled on July 1, 2024](https://support.google.com/analytics/answer/11583528). This tool simplifies data exportation from Universal Analytics, allowing for flexible data retrieval in any format (by default JSON/CSV).
 
+[Demo](https://google-analytics-viewer.vercel.app/)
+
 
 ## Installation
 
@@ -77,6 +79,7 @@ Copy the contents of the service account JSON file and remove the white space so
 - Need help adding service account to Google Analytics? Click [here](https://support.google.com/analytics/answer/1009702#Add).
 - Struggling to find the view ID? Click [here](https://reflectivedata.com/documentation/google-analytics-reports/finding-view-id/#:~:text=Go%20to%20Admin%20settings%20in%20Google%20Analytics&text=In%20the%20admin%20section%2C%20click,will%20find%20the%20view%20ID.).
 - Struggling to find the property ID? Click [here](https://developers.google.com/analytics/devguides/reporting/data/v1/property-id#google_analytics).
+
 
 ## Links
 
