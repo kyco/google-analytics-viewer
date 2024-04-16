@@ -1,0 +1,25 @@
+{
+  "printWidth": 120,
+  "semi": false,
+  "arrowParens": "always",
+  "trailingComma": "all",
+  "singleQuote": true,
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports"
+  ],
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "@/typings",
+    "@/common",
+    "@/components",
+    "@/lib",
+    "@/pages",
+    "@/utils",
+    "@/styles",
+    "",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}

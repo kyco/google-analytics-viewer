@@ -1,0 +1,50 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/no-shadow": ["warn", { "ignoreOnInitialization": true }],
+    "@typescript-eslint/no-var-requires": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "arrow-body-style": "off",
+    "import/prefer-default-export": "off",
+    "no-console": ["warn", { "allow": ["info", "warn", "error", "group", "groupCollapsed", "groupEnd"] }],
+    "no-restricted-exports": "off",
+    "no-underscore-dangle": "off",
+    "no-unused-vars": "warn",
+    "no-useless-escape": "warn",
+    "no-param-reassign": "warn",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "prefer-destructuring": [
+      "warn",
+      {
+        "VariableDeclarator": { "array": false, "object": true },
+        "AssignmentExpression": { "array": false, "object": false }
+      }
+    ],
+    "prefer-template": "warn",
+    "react/display-name": "off",
+    "react/function-component-definition": [2, { "namedComponents": ["arrow-function"] }],
+    "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "react/jsx-props-no-spreading": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
+    "semi": "off"
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "root": true
+}
