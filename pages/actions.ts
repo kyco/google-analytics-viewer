@@ -13,18 +13,18 @@ export type FormData = {
 }
 
 export const defaultFormData: FormData = {
-  mode: 'ga',
-  startDate: '2023-05-01',
-  endDate: '2023-12-01',
+  mode: 'ua',
+  startDate: '2023-07-01',
+  endDate: '2023-10-01',
   group: 'month',
 }
 
 export const transformGa4Data = (data: any[]) => {
   return data.map((value: any) => {
     const headers = {
-      label: value.batch.dateRanges[0].startDate,
-      metric: value.batch.metrics[0].name,
-      dimension: value.batch.dimensions[0].name,
+      label: value.request.dateRanges[0].startDate,
+      metric: value.request.metrics[0].name,
+      dimension: value.request.dimensions[0].name,
     }
 
     const dataset = value.response.rows.length
@@ -40,7 +40,43 @@ export const transformGa4Data = (data: any[]) => {
           .reduce(
             (acc: any, cur: any) => {
               return {
-                value: acc.value + Number(cur.item.screenPageViews),
+                value: acc.value + Number(cur.item[headers.metric]),
+                items: [...acc.items, cur.item],
+              }
+            },
+            { value: 0, items: [] },
+          )
+      : { value: 0, items: [] }
+
+    return {
+      ...headers,
+      ...dataset,
+    }
+  })
+}
+
+export const transformUniversalData = (data: any[]) => {
+  return data.map((value: any) => {
+    const headers = {
+      label: value.request['start-date'],
+      metric: value.request.metrics,
+      dimension: value.request.dimensions,
+    }
+
+    const dataset = value.response.rows?.length
+      ? value.response.rows
+          .map((row: any) => {
+            return {
+              item: {
+                [headers.dimension]: row[0],
+                [headers.metric]: row[1],
+              },
+            }
+          })
+          .reduce(
+            (acc: any, cur: any) => {
+              return {
+                value: acc.value + Number(cur.item[headers.metric]),
                 items: [...acc.items, cur.item],
               }
             },
@@ -79,13 +115,9 @@ export const getGa4Stats = async (data: FormData) => {
   switch (data.group) {
     case 'day': {
       requests = eachDayOfInterval({ start, end }).map((value) => {
+        const day = format(value, MISC.SYSTEM_DATE_FORMAT)
         return {
-          dateRanges: [
-            {
-              startDate: format(value, MISC.SYSTEM_DATE_FORMAT),
-              endDate: format(value, MISC.SYSTEM_DATE_FORMAT),
-            },
-          ],
+          dateRanges: [{ startDate: day, endDate: day }],
           metrics,
           dimensions,
         }
@@ -97,12 +129,7 @@ export const getGa4Stats = async (data: FormData) => {
       requests = eachWeekOfInterval({ start, end }).map((value) => {
         const week = getStartEndOfWeek(value, start, end)
         return {
-          dateRanges: [
-            {
-              startDate: week.start,
-              endDate: week.end,
-            },
-          ],
+          dateRanges: [{ startDate: week.start, endDate: week.end }],
           metrics,
           dimensions,
         }
@@ -114,12 +141,7 @@ export const getGa4Stats = async (data: FormData) => {
       requests = eachMonthOfInterval({ start, end }).map((value) => {
         const month = getStartEndOfMonth(value, start, end)
         return {
-          dateRanges: [
-            {
-              startDate: month.start,
-              endDate: month.end,
-            },
-          ],
+          dateRanges: [{ startDate: month.start, endDate: month.end }],
           metrics,
           dimensions,
         }
@@ -138,10 +160,62 @@ export const getGa4Stats = async (data: FormData) => {
   return res.data || []
 }
 
-export const getUniversalStats = async () => {
-  const report = await fetch(
-    '/api/ua-report?start=2023-01-01&end=today&metrics=pageViews&dimensions=pagePath&pretty=true',
-  )
+export const getUniversalStats = async (data: FormData) => {
+  // https://developers.google.com/analytics/devguides/reporting/core/v3/reference#dimensions
+  // https://developers.google.com/analytics/devguides/reporting/core/v3/reference#metrics
+  let requests: any[] = []
+  const start = toDate(data.startDate)
+  const end = toDate(data.endDate)
+  const metrics = 'ga:pageViews'
+  const dimensions = 'ga:pagePath'
+
+  switch (data.group) {
+    case 'day': {
+      requests = eachDayOfInterval({ start, end }).map((value) => {
+        const day = format(value, MISC.SYSTEM_DATE_FORMAT)
+        return {
+          'start-date': day,
+          'end-date': day,
+          metrics,
+          dimensions,
+        }
+      })
+      break
+    }
+
+    case 'week': {
+      requests = eachWeekOfInterval({ start, end }).map((value) => {
+        const week = getStartEndOfWeek(value, start, end)
+        return {
+          'start-date': week.start,
+          'end-date': week.end,
+          metrics,
+          dimensions,
+        }
+      })
+      break
+    }
+
+    case 'month': {
+      requests = eachMonthOfInterval({ start, end }).map((value) => {
+        const month = getStartEndOfMonth(value, start, end)
+        return {
+          'start-date': month.start,
+          'end-date': month.end,
+          metrics,
+          dimensions,
+        }
+      })
+      break
+    }
+
+    default:
+      console.warn(`No case for data.group "${data.group}" exists!`)
+      requests = []
+  }
+
+  const body = JSON.stringify({ requests })
+  const report = await fetch('/api/ua-report', { method: 'POST', body })
   const res: { data: any } = await report.json()
   return res.data || []
 }

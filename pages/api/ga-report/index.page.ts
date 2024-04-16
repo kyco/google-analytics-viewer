@@ -45,8 +45,8 @@ const runReport = async (requests: IRunReportRequest[]) => {
   const transformedResults = batches.map((batch, index) => {
     return batch.map((item, idx) => {
       return {
-        batch: item,
-        response: results[index]?.[idx] || [],
+        request: item,
+        response: results[index]?.[idx],
       }
     })
   })

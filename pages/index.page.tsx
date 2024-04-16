@@ -4,7 +4,15 @@ import { useEffect, useState } from 'react'
 
 import { LineChart } from '@/components/Charts'
 
-import { chartOptions, convertToChartData, defaultFormData, getGa4Stats, transformGa4Data } from './actions'
+import {
+  chartOptions,
+  convertToChartData,
+  defaultFormData,
+  getGa4Stats,
+  getUniversalStats,
+  transformGa4Data,
+  transformUniversalData,
+} from './actions'
 import type { FormData } from './actions'
 
 type ChartData = {
@@ -23,16 +31,24 @@ const Page = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true)
-    console.log('formData:', formData)
-    const res = await getGa4Stats(formData)
+    let res = []
+    if (formData.mode === 'ua') {
+      res = await getUniversalStats(formData)
+    } else {
+      res = await getGa4Stats(formData)
+    }
     setResponse(res)
     setIsLoading(false)
-    console.log('res', res)
   }
 
   useEffect(() => {
     console.log('uE response', response)
-    const transformedData = transformGa4Data(response)
+    let transformedData = []
+    if (formData.mode === 'ua') {
+      transformedData = transformUniversalData(response)
+    } else {
+      transformedData = transformGa4Data(response)
+    }
     console.log('transformedData', transformedData)
     const { labels, datasets } = convertToChartData(transformedData)
     setChartData({ labels, datasets })
@@ -52,8 +68,6 @@ const Page = () => {
               disableElevation
               color="secondary"
               sx={{ height: 40 }}
-              // TODO: Implement
-              disabled
             >
               Universal Analytics
             </Button>
@@ -115,7 +129,8 @@ const Page = () => {
           </ButtonGroup>
           {formData.group === 'day' ? (
             <Typography component="span" sx={{ ml: 2, fontSize: 14 }}>
-              <strong>Caution:</strong> Can take long to load!
+              {/* TODO: Add a wait estimate for days/week/months selected */}
+              <strong>Caution:</strong> Can take very long to load!
             </Typography>
           ) : null}
         </Grid>
