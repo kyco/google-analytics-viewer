@@ -6,6 +6,7 @@ import type { ChartData } from '@/typings'
 
 import {
   convertToChartData,
+  exportDataToCsv,
   getDefaultFormData,
   getGa4Stats,
   getUniversalStats,
@@ -38,6 +39,10 @@ const Page = () => {
     setTableData(transformedData)
     setChartData(convertToChartData(transformedData))
     setIsLoading(false)
+  }
+
+  const exportData = () => {
+    exportDataToCsv(tableData)
   }
 
   useEffect(() => {
@@ -140,14 +145,7 @@ const Page = () => {
           >
             Update chart
           </LoadingButton>
-          <Button
-            variant="outlined"
-            size="large"
-            disableElevation
-            onClick={handleSubmit}
-            // TODO: Implement
-            disabled
-          >
+          <Button variant="outlined" size="large" disableElevation onClick={exportData} disabled={!tableData.length}>
             Export Data
           </Button>
         </Grid>
