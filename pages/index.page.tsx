@@ -1,8 +1,8 @@
 import { LoadingButton } from '@mui/lab'
-import { Button, ButtonGroup, Container, Unstable_Grid2 as Grid, TextField, Typography } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Alert, Button, ButtonGroup, Container, Unstable_Grid2 as Grid, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
 
-import type { ChartData } from '@/typings'
+import type { ChartData, TableData } from '@/typings'
 
 import {
   convertToChartData,
@@ -19,39 +19,51 @@ import { PageViewsChart, PageViewsTable } from './components'
 const Page = () => {
   const [formData, setFormData] = useState<FormData>(getDefaultFormData())
   const [isLoading, setIsLoading] = useState(false)
-  const [tableData, setTableData] = useState<any[]>([])
+  const [error, setError] = useState('')
+  const [tableData, setTableData] = useState<TableData>({
+    mode: formData.mode,
+    data: [],
+  })
   const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [],
   })
 
   const handleSubmit = async () => {
+    setError('')
     setIsLoading(true)
     let res = []
     let transformedData = []
+
     if (formData.mode === 'ua') {
       res = await getUniversalStats(formData)
-      transformedData = transformUniversalData(res)
     } else {
       res = await getGa4Stats(formData)
+    }
+
+    if (res.error) {
+      console.error('Error:', res.error)
+      setError(
+        res.error.details || res.error.errors?.[0].message || 'Failed to load data, check console for more info!',
+      )
+      setIsLoading(false)
+      return
+    }
+
+    if (formData.mode === 'ua') {
+      transformedData = transformUniversalData(res)
+    } else {
       transformedData = transformGa4Data(res)
     }
-    setTableData(transformedData)
+
+    setTableData({ mode: formData.mode, data: transformedData })
     setChartData(convertToChartData(transformedData))
     setIsLoading(false)
   }
 
   const exportData = () => {
-    exportDataToCsv(tableData)
+    exportDataToCsv(tableData.data)
   }
-
-  useEffect(() => {
-    setTableData([])
-    setChartData({
-      labels: [],
-      datasets: [],
-    })
-  }, [formData.mode])
 
   return (
     <Container maxWidth="lg">
@@ -126,15 +138,17 @@ const Page = () => {
               Month
             </Button>
           </ButtonGroup>
-          {formData.group === 'day' ? (
-            <Typography component="span" sx={{ ml: 2, fontSize: 14 }}>
-              {/* TODO: Add a wait estimate for days/week/months selected */}
-              <strong>Caution:</strong> Can take very long to load!
-            </Typography>
-          ) : null}
         </Grid>
 
-        <Grid xs={12} my={2}>
+        <Grid xs={12}>
+          <Alert severity="warning">
+            {/* TODO: Add a wait estimate for days/week/months selected */}
+            <strong>Caution:</strong> Selecting a large date range and/or a day/week/month combination which has lots of
+            data can potentially take very long to load!
+          </Alert>
+        </Grid>
+
+        <Grid xs={12} mb={2}>
           <LoadingButton
             variant="contained"
             size="large"
@@ -145,17 +159,28 @@ const Page = () => {
           >
             Update chart
           </LoadingButton>
-          <Button variant="outlined" size="large" disableElevation onClick={exportData} disabled={!tableData.length}>
+          <Button
+            variant="outlined"
+            size="large"
+            disableElevation
+            onClick={exportData}
+            disabled={!tableData.data.length}
+          >
             Export Data
           </Button>
         </Grid>
+        {error ? (
+          <Grid xs={12}>
+            <Alert severity="error">{error}</Alert>
+          </Grid>
+        ) : null}
 
         <Grid xs={12} mt={1}>
           <PageViewsChart data={chartData} />
         </Grid>
 
         <Grid xs={12} mt={1} mb={5}>
-          <PageViewsTable data={tableData} mode={formData.mode} />
+          <PageViewsTable data={tableData} />
         </Grid>
       </Grid>
     </Container>

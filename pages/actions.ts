@@ -157,8 +157,8 @@ export const getGa4Stats = async (data: FormData) => {
 
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ga-report', { method: 'POST', body })
-  const res: { data: any } = await report.json()
-  return res.data || []
+  const res = await report.json()
+  return res.error ? { error: res.error, data: [] } : res.data || []
 }
 
 export const getUniversalStats = async (data: FormData) => {
@@ -217,8 +217,8 @@ export const getUniversalStats = async (data: FormData) => {
 
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ua-report', { method: 'POST', body })
-  const res: { data: any } = await report.json()
-  return res.data || []
+  const res = await report.json()
+  return res.error ? { error: res.error, data: [] } : res.data || []
 }
 
 export const exportDataToCsv = (data: any[]) => {

@@ -1,21 +1,20 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 
-import type { FormData } from '@/pages/actions'
+import type { TableData } from '@/typings'
 
 import { convertToTableRowData } from './actions'
 
 type PageViewsTableProps = {
-  data: any[]
-  mode: FormData['mode']
+  data: TableData
 }
 
-const Component = ({ data, mode }: PageViewsTableProps) => {
+const Component = ({ data }: PageViewsTableProps) => {
   let rows: any[] = []
 
-  if (mode === 'ua') {
-    rows = convertToTableRowData(data, 'ga:pagePath', 'ga:pageViews')
+  if (data.mode === 'ua') {
+    rows = convertToTableRowData(data.data, 'ga:pagePath', 'ga:pageViews')
   } else {
-    rows = convertToTableRowData(data, 'pagePath', 'screenPageViews')
+    rows = convertToTableRowData(data.data, 'pagePath', 'screenPageViews')
   }
 
   return (
@@ -30,7 +29,7 @@ const Component = ({ data, mode }: PageViewsTableProps) => {
         <TableBody>
           {rows.length ? (
             rows.map((row) => (
-              <TableRow key={row.label} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableRow key={`${row.label}-${data.mode}`} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell
                   component="th"
                   scope="row"

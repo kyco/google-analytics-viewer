@@ -10,7 +10,7 @@ type PageViewsChartProps = {
 const Component = ({ data }: PageViewsChartProps) => {
   const chartOptions = getChartOptions()
 
-  return <LineChart type="line" options={chartOptions} data={data} style={{ height: '300px' }} />
+  return <LineChart type="line" options={chartOptions} data={data} style={{ height: 300 }} />
 }
 
 export default Component
