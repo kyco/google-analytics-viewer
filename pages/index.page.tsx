@@ -1,19 +1,19 @@
 import { LoadingButton } from '@mui/lab'
 import { Alert, Button, ButtonGroup, Container, Unstable_Grid2 as Grid, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
-import type { ChartData, TableData } from '@/typings'
+import type { ChartData, FormData, TableData } from '@/typings'
 
 import {
   convertToChartData,
   exportDataToCsv,
+  exportDataToJson,
   getDefaultFormData,
   getGa4Stats,
   getUniversalStats,
   transformGa4Data,
   transformUniversalData,
 } from './actions'
-import type { FormData } from './actions'
 import { PageViewsChart, PageViewsTable } from './components'
 
 const Page = () => {
@@ -28,6 +28,7 @@ const Page = () => {
     labels: [],
     datasets: [],
   })
+  const rawJson = useRef<any>(null)
 
   const handleSubmit = async () => {
     setError('')
@@ -53,10 +54,12 @@ const Page = () => {
       return
     }
 
+    rawJson.current = res
+
     if (formData.mode === 'ua') {
-      transformedData = transformUniversalData(res)
+      transformedData = transformUniversalData(res.data)
     } else {
-      transformedData = transformGa4Data(res)
+      transformedData = transformGa4Data(res.data)
     }
 
     setTableData({ mode: formData.mode, data: transformedData })
@@ -64,8 +67,12 @@ const Page = () => {
     setIsLoading(false)
   }
 
-  const exportData = () => {
+  const exportCsv = () => {
     exportDataToCsv(tableData.data)
+  }
+
+  const exportJson = () => {
+    exportDataToJson(rawJson.current)
   }
 
   return (
@@ -166,10 +173,20 @@ const Page = () => {
             variant="outlined"
             size="large"
             disableElevation
-            onClick={exportData}
+            onClick={exportCsv}
+            disabled={!tableData.data.length}
+            sx={{ mr: 1 }}
+          >
+            Export CSV
+          </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            disableElevation
+            onClick={exportJson}
             disabled={!tableData.data.length}
           >
-            Export Data
+            Export raw JSON
           </Button>
         </Grid>
 

@@ -101,7 +101,7 @@ export const getGa4Stats = async (data: FormData) => {
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ga-report', { method: 'POST', body })
   const res = await report.json()
-  return res.error ? { error: res.error, data: [] } : res.data || []
+  return res.error ? { error: res.error, data: [] } : res || []
 }
 
 export const getUniversalStats = async (data: FormData) => {
@@ -109,7 +109,7 @@ export const getUniversalStats = async (data: FormData) => {
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ua-report', { method: 'POST', body })
   const res = await report.json()
-  return res.error ? { error: res.error, data: [] } : res.data || []
+  return res.error ? { error: res.error, data: [] } : res || []
 }
 
 export const exportDataToCsv = (data: any[]) => {
@@ -119,5 +119,15 @@ export const exportDataToCsv = (data: any[]) => {
   const a = document.createElement('a')
   a.href = url
   a.download = 'pageviews.csv'
+  a.click()
+}
+
+export const exportDataToJson = (data: any[]) => {
+  const json = JSON.stringify(data)
+  const blob = new Blob([json], { type: 'text/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'data.json'
   a.click()
 }
