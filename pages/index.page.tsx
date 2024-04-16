@@ -2,27 +2,21 @@ import { LoadingButton } from '@mui/lab'
 import { Button, ButtonGroup, Container, Unstable_Grid2 as Grid, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { LineChart } from '@/components/Charts'
+import type { ChartData } from '@/typings'
 
 import {
-  chartOptions,
   convertToChartData,
-  defaultFormData,
+  getDefaultFormData,
   getGa4Stats,
   getUniversalStats,
   transformGa4Data,
   transformUniversalData,
 } from './actions'
 import type { FormData } from './actions'
-import { PageViewsTable } from './components'
-
-type ChartData = {
-  labels: string[]
-  datasets: any[]
-}
+import { PageViewsChart, PageViewsTable } from './components'
 
 const Page = () => {
-  const [formData, setFormData] = useState<FormData>(defaultFormData)
+  const [formData, setFormData] = useState<FormData>(getDefaultFormData())
   const [isLoading, setIsLoading] = useState(false)
   const [tableData, setTableData] = useState<any[]>([])
   const [chartData, setChartData] = useState<ChartData>({
@@ -159,7 +153,7 @@ const Page = () => {
         </Grid>
 
         <Grid xs={12}>
-          <LineChart type="line" options={chartOptions} data={chartData} style={{ height: '300px' }} />
+          <PageViewsChart data={chartData} />
         </Grid>
 
         <Grid xs={12}>

@@ -1,4 +1,3 @@
-import type { ChartOptions } from 'chart.js'
 import { eachDayOfInterval, eachMonthOfInterval, eachWeekOfInterval, format } from 'date-fns'
 
 import type { IRunReportRequest } from '@/typings'
@@ -12,11 +11,13 @@ export type FormData = {
   group: 'day' | 'week' | 'month'
 }
 
-export const defaultFormData: FormData = {
-  mode: 'ua',
-  startDate: '2023-07-01',
-  endDate: '2023-10-01',
-  group: 'month',
+export const getDefaultFormData = (): FormData => {
+  return {
+    mode: 'ua',
+    startDate: '2023-07-01',
+    endDate: '2023-10-01',
+    group: 'month',
+  }
 }
 
 export const transformGa4Data = (data: any[]) => {
@@ -218,34 +219,4 @@ export const getUniversalStats = async (data: FormData) => {
   const report = await fetch('/api/ua-report', { method: 'POST', body })
   const res: { data: any } = await report.json()
   return res.data || []
-}
-
-export const chartOptions: ChartOptions<'line'> = {
-  responsive: true,
-  maintainAspectRatio: false,
-  scales: {
-    x: {
-      border: {
-        display: false,
-      },
-      grid: {
-        display: false,
-      },
-    },
-    y: {
-      border: {
-        display: false,
-      },
-    },
-  },
-  elements: {
-    point: {
-      radius: 1,
-    },
-  },
-  plugins: {
-    legend: {
-      display: false,
-    },
-  },
 }
