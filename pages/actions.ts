@@ -1,15 +1,5 @@
-import { eachDayOfInterval, eachMonthOfInterval, eachWeekOfInterval, format } from 'date-fns'
-
-import type { IRunReportRequest } from '@/typings'
-import { MISC } from '@/common'
-import { getStartEndOfMonth, getStartEndOfWeek, toDate } from '@/utils/Date'
-
-export type FormData = {
-  mode: 'ua' | 'ga'
-  startDate: string
-  endDate: string
-  group: 'day' | 'week' | 'month'
-}
+import type { FormData } from '@/typings'
+import { generateGa4Requests, generateUniversalAnalyticsRequests } from '@/utils/Analytics'
 
 export const getDefaultFormData = (): FormData => {
   return {
@@ -107,54 +97,7 @@ export const convertToChartData = (transformedData: any[]) => {
 }
 
 export const getGa4Stats = async (data: FormData) => {
-  let requests: IRunReportRequest[] = []
-  const start = toDate(data.startDate)
-  const end = toDate(data.endDate)
-  const metrics = [{ name: MISC.GA_METRIC }]
-  const dimensions = [{ name: MISC.GA_DIMENSION }]
-
-  switch (data.group) {
-    case 'day': {
-      requests = eachDayOfInterval({ start, end }).map((value) => {
-        const day = format(value, MISC.SYSTEM_DATE_FORMAT)
-        return {
-          dateRanges: [{ startDate: day, endDate: day }],
-          metrics,
-          dimensions,
-        }
-      })
-      break
-    }
-
-    case 'week': {
-      requests = eachWeekOfInterval({ start, end }).map((value) => {
-        const week = getStartEndOfWeek(value, start, end)
-        return {
-          dateRanges: [{ startDate: week.start, endDate: week.end }],
-          metrics,
-          dimensions,
-        }
-      })
-      break
-    }
-
-    case 'month': {
-      requests = eachMonthOfInterval({ start, end }).map((value) => {
-        const month = getStartEndOfMonth(value, start, end)
-        return {
-          dateRanges: [{ startDate: month.start, endDate: month.end }],
-          metrics,
-          dimensions,
-        }
-      })
-      break
-    }
-
-    default:
-      console.warn(`No case for data.group "${data.group}" exists!`)
-      requests = []
-  }
-
+  const requests = generateGa4Requests(data.group, data.startDate, data.endDate)
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ga-report', { method: 'POST', body })
   const res = await report.json()
@@ -162,57 +105,7 @@ export const getGa4Stats = async (data: FormData) => {
 }
 
 export const getUniversalStats = async (data: FormData) => {
-  // https://developers.google.com/analytics/devguides/reporting/core/v3/reference#dimensions
-  // https://developers.google.com/analytics/devguides/reporting/core/v3/reference#metrics
-  let requests: any[] = []
-  const start = toDate(data.startDate)
-  const end = toDate(data.endDate)
-
-  switch (data.group) {
-    case 'day': {
-      requests = eachDayOfInterval({ start, end }).map((value) => {
-        const day = format(value, MISC.SYSTEM_DATE_FORMAT)
-        return {
-          'start-date': day,
-          'end-date': day,
-          metrics: MISC.UA_METRIC,
-          dimensions: MISC.UA_DIMENSION,
-        }
-      })
-      break
-    }
-
-    case 'week': {
-      requests = eachWeekOfInterval({ start, end }).map((value) => {
-        const week = getStartEndOfWeek(value, start, end)
-        return {
-          'start-date': week.start,
-          'end-date': week.end,
-          metrics: MISC.UA_METRIC,
-          dimensions: MISC.UA_DIMENSION,
-        }
-      })
-      break
-    }
-
-    case 'month': {
-      requests = eachMonthOfInterval({ start, end }).map((value) => {
-        const month = getStartEndOfMonth(value, start, end)
-        return {
-          'start-date': month.start,
-          'end-date': month.end,
-          metrics: MISC.UA_METRIC,
-          dimensions: MISC.UA_DIMENSION,
-        }
-      })
-      break
-    }
-
-    default:
-      console.warn(`No case for data.group "${data.group}" exists!`)
-      requests = []
-  }
-
+  const requests = generateUniversalAnalyticsRequests(data.group, data.startDate, data.endDate)
   const body = JSON.stringify({ requests })
   const report = await fetch('/api/ua-report', { method: 'POST', body })
   const res = await report.json()
