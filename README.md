@@ -75,9 +75,11 @@ GA_SERVICE_ACCOUNT_CREDENTIALS={"type": "service_account", "project_id": "abc", 
 
 ## Troubleshooting
 
-_Google Analytics and Google Cloud:_
+_Google Cloud:_
 - [Creating a service account](https://cloud.google.com/iam/docs/keys-create-delete#creating)
-- [Adding a service account](https://support.google.com/analytics/answer/1009702#Add)
+
+_Google Analytics:_
+- [Adding a service account](https://support.google.com/analytics/answer/1009702#Add) _(Universal Analytics & GA4)_
 - [Locating the view ID](https://reflectivedata.com/documentation/google-analytics-reports/finding-view-id/#:~:text=Go%20to%20Admin%20settings%20in%20Google%20Analytics&text=In%20the%20admin%20section%2C%20click,will%20find%20the%20view%20ID.) _(Universal Analytics)_
 - [Locating the property ID](https://developers.google.com/analytics/devguides/reporting/data/v1/property-id#google_analytics) _(GA4)_
 
