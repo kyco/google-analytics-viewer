@@ -1,6 +1,6 @@
 # Google Analytics Viewer
 
-Export and view your Universal Analytics data before the [API is disabled on July 1, 2024](https://support.google.com/analytics/answer/11583528). This tool simplifies data exportation from Universal Analytics, allowing for flexible data retrieval in any format (by default JSON/CSV).
+View and export your Universal Analytics data before the [API is disabled on July 1, 2024](https://support.google.com/analytics/answer/11583528). This tool simplifies data exportation from Universal Analytics, allowing for flexible data retrieval in any format (by default CSV & JSON).
 
 [Demo](https://google-analytics-viewer.vercel.app/)
 
@@ -45,7 +45,7 @@ Enable the required APIs:
 
 ### Step 3: Add Service Account to Google Analytics
 
-In [Google Analytics](https://analytics.google.com/analytics/web/) add the `client_email` from your service account file as a "Viewer":
+Copy the `client_email` from your service account file and add it as a "Viewer" via the [Google Analytics UI](https://analytics.google.com/analytics/web/):
 - Admin > Account Access Management > Add users
 
 ### Step 4: Setup Environment Variables
@@ -59,26 +59,27 @@ GA_SERVICE_ACCOUNT_CREDENTIALS=<compressed_json_credentials>
 
 #### View ID
 
-In Google Analytics _Universal property_:
-- Admin > View Settings > View ID
+- _[Universal Analytics]((https://analytics.google.com/analytics/web/))_: Admin > View Settings > View ID
 
 #### Property ID
 
-In Google Analytics _GA4 property_:
-  - Admin > Property details > Property ID
+- _[GA4]((https://analytics.google.com/analytics/web/))_: Admin > Property details > Property ID
 
 #### Service account credentials
 
 Copy the contents of the service account JSON file and remove the white space so it fits on a single line. The end result should look like the following:
-- `{"type": "service_account", "project_id": "abc", ...}`
+```
+GA_SERVICE_ACCOUNT_CREDENTIALS={"type": "service_account", "project_id": "abc", ...}
+```
 
 
 ## Troubleshooting
 
-- Need help creating a service account? Click [here](https://cloud.google.com/iam/docs/keys-create-delete#creating).
-- Need help adding service account to Google Analytics? Click [here](https://support.google.com/analytics/answer/1009702#Add).
-- Struggling to find the view ID? Click [here](https://reflectivedata.com/documentation/google-analytics-reports/finding-view-id/#:~:text=Go%20to%20Admin%20settings%20in%20Google%20Analytics&text=In%20the%20admin%20section%2C%20click,will%20find%20the%20view%20ID.).
-- Struggling to find the property ID? Click [here](https://developers.google.com/analytics/devguides/reporting/data/v1/property-id#google_analytics).
+_Google Analytics and Google Cloud:_
+- [Creating a service account](https://cloud.google.com/iam/docs/keys-create-delete#creating)
+- [Adding a service account](https://support.google.com/analytics/answer/1009702#Add)
+- [Locating the view ID](https://reflectivedata.com/documentation/google-analytics-reports/finding-view-id/#:~:text=Go%20to%20Admin%20settings%20in%20Google%20Analytics&text=In%20the%20admin%20section%2C%20click,will%20find%20the%20view%20ID.) _(Universal Analytics)_
+- [Locating the property ID](https://developers.google.com/analytics/devguides/reporting/data/v1/property-id#google_analytics) _(GA4)_
 
 
 ## Links
