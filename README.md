@@ -1,6 +1,6 @@
 # Google Analytics Viewer
 
-View and export your Universal Analytics data before the [API is disabled on July 1, 2024](https://support.google.com/analytics/answer/11583528). This tool simplifies data exportation from Universal Analytics, allowing for flexible data retrieval in any format (by default CSV & JSON).
+View and export your Universal Analytics data before the [API is disabled on July 1, 2024](https://support.google.com/analytics/answer/11583528). This tool simplifies data exportation from Universal Analytics, allowing for flexible data retrieval in any format (by default CSV & JSON). Plus, this tool also allows you to do the same with your GA4 data, making it easy to both view and export your data well into the future.
 
 [Demo](https://google-analytics-viewer.vercel.app/)
 
