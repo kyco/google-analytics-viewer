@@ -83,10 +83,16 @@ Copy the contents of the service account JSON file and remove the white space so
 
 ## Links
 
-- [Dimensions & Metrics Explorer](https://ga-dev-tools.google/dimensions-metrics-explorer/) (UA and GA4)
-- [Universal Analytics API Reference](https://developers.google.com/analytics/devguides/reporting/core/v3/coreDevguide#build-a-core-reporting-api-query)
-- [GA4 API Reference](https://developers.google.com/analytics/devguides/reporting/data/v1)
+_Universal Analytics:_
+- [API Reference](https://developers.google.com/analytics/devguides/reporting/core/v3/coreDevguide#build-a-core-reporting-api-query)
+- [Dimensions & Metrics](https://developers.google.com/analytics/devguides/reporting/core/v3/reference#dimensions)
 
+_GA4:_
+- [API Reference](https://developers.google.com/analytics/devguides/reporting/data/v1)
+- [Dimensions & Metrics](https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema)
+
+_Universal Analytics & GA4:_
+- [Dimensions & Metrics Explorer](https://ga-dev-tools.google/dimensions-metrics-explorer/)
 
 ## Support
 
